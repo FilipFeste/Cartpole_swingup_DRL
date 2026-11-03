@@ -1,0 +1,3 @@
+gymnasium[classic-control]
+stable-baselines3
+tensorboard
