@@ -3,6 +3,7 @@
 
 import math
 import numpy as np
+import gymnasium as gym
 from gymnasium import spaces
 from gymnasium.envs.classic_control.cartpole import CartPoleEnv
 
@@ -25,8 +26,12 @@ class CartPoleSwingUpEnv(CartPoleEnv):
         self.observation_space = spaces.Box(-high, high, dtype=np.float32)
 
     def reset(self, *, seed=None, options=None):
-        super().reset(seed=seed, options=options)   # liten tilfeldig støy rundt 0
-        self.state[2] += math.pi  # Start pendelen opp ned
+        gym.Env.reset(self, seed=seed)  # bare seeding av self.np_random
+        self.state = self.np_random.uniform(low=-0.05, high=0.05, size=(4,))
+        self.state[2] += math.pi        # start hengende
+        self.steps_beyond_terminated = None
+        if self.render_mode == "human":
+            self.render()
         return self._get_obs(), {}
 
     def step(self, action):
